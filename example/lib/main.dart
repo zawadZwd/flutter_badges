@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
 }
 
 ThemeData _buildTheme() {
-  final ThemeData base = ThemeData.light();
+  final base = ThemeData.light();
   return base.copyWith(
       primaryIconTheme: base.iconTheme.copyWith(color: Colors.black));
 }
@@ -92,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _tabBar() {
+  PreferredSizeWidget _tabBar() {
     return TabBar(tabs: [
       Tab(
         icon: Badge(
@@ -140,13 +140,13 @@ class _HomeScreenState extends State<HomeScreen> {
           icon: Badge(
             shape: BadgeShape.circle,
             borderRadius: BorderRadius.circular(100),
-            child: Icon(Icons.settings),
             badgeContent: Container(
               height: 5,
               width: 5,
               decoration:
                   BoxDecoration(shape: BoxShape.circle, color: Colors.white),
             ),
+            child: Icon(Icons.settings),
           ),
         ),
       ],
@@ -159,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          RaisedButton.icon(
+          ElevatedButton.icon(
               onPressed: () {
                 setState(() {
                   _counter++;
@@ -167,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               icon: Icon(Icons.add),
               label: Text('Add to cart')),
-          RaisedButton.icon(
+          ElevatedButton.icon(
               onPressed: () {
                 if (_counter > 0) {
                   setState(() {
@@ -191,8 +191,9 @@ class _HomeScreenState extends State<HomeScreen> {
           '!',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        child: Text('This is a text'),
+        
         position: BadgePosition.topStart(top: -15),
+        child: Text('This is a text'),
       ),
     );
   }
@@ -206,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
         '!',
         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       ),
-      child: RaisedButton(
+      child: ElevatedButton(
         onPressed: () {
           setState(() {
             showRaisedButtonBadge = !showRaisedButtonBadge;
@@ -238,7 +239,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _getExampleBadge({double padding}) {
+  Widget _getExampleBadge({double? padding}) {
     return Padding(
       padding: const EdgeInsets.all(4),
       child: Badge(

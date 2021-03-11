@@ -18,7 +18,7 @@ class Badge extends StatefulWidget {
   /// * [BadgeAnimationType]
   /// * [BorderSide]
   Badge({
-    Key key,
+    Key? key,
     this.badgeContent,
     this.child,
     this.badgeColor = Colors.red,
@@ -37,7 +37,7 @@ class Badge extends StatefulWidget {
   }) : super(key: key);
 
   /// It defines the widget that will be wrapped by this [badgeContent].
-  final Widget child;
+  final Widget? child;
 
   /// This defines alignment for your [child].
   ///
@@ -48,10 +48,10 @@ class Badge extends StatefulWidget {
   /// according to [child].
   ///
   /// If [child] is null, it doesn't make sense to use it.
-  final BadgePosition position;
+  final BadgePosition? position;
 
   /// Content of this badge widget
-  final Widget badgeContent;
+  final Widget? badgeContent;
 
   /// Can make your [badgeContent] interactive.
   ///
@@ -133,8 +133,8 @@ class Badge extends StatefulWidget {
 }
 
 class BadgeState extends State<Badge> with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation<double> _animation;
+  AnimationController? _animationController;
+  Animation<double>? _animation;
 
   final Tween<Offset> _positionTween = Tween(
     begin: const Offset(-0.5, 0.9),
@@ -152,15 +152,15 @@ class BadgeState extends State<Badge> with SingleTickerProviderStateMixin {
 
     if (widget.animationType == BadgeAnimationType.slide) {
       _animation = CurvedAnimation(
-          parent: _animationController, curve: Curves.elasticOut);
+          parent: _animationController!, curve: Curves.elasticOut);
     } else if (widget.animationType == BadgeAnimationType.scale) {
-      _animation = _scaleTween.animate(_animationController);
+      _animation = _scaleTween.animate(_animationController!);
     } else if (widget.animationType == BadgeAnimationType.fade) {
       _animation =
-          CurvedAnimation(parent: _animationController, curve: Curves.easeIn);
+          CurvedAnimation(parent: _animationController!, curve: Curves.easeIn);
     }
 
-    _animationController.forward();
+    _animationController!.forward();
   }
 
   @override
@@ -172,7 +172,7 @@ class BadgeState extends State<Badge> with SingleTickerProviderStateMixin {
         alignment: widget.alignment,
         clipBehavior: Clip.none,
         children: [
-          widget.child,
+          widget.child!,
           BadgePositioned(
             position: widget.position,
             child: widget.ignorePointer
@@ -189,11 +189,13 @@ class BadgeState extends State<Badge> with SingleTickerProviderStateMixin {
         ? CircleBorder(side: widget.borderSide)
         : RoundedRectangleBorder(
             side: widget.borderSide,
-            borderRadius: widget.borderRadius ?? BorderRadius.zero,
+            borderRadius: widget.borderRadius,
           );
 
     Widget _badgeView() {
       return AnimatedOpacity(
+        opacity: widget.showBadge ? 1 : 0,
+        duration: Duration(milliseconds: 200),
         child: Material(
           shape: border,
           elevation: widget.elevation,
@@ -203,25 +205,23 @@ class BadgeState extends State<Badge> with SingleTickerProviderStateMixin {
             child: widget.badgeContent,
           ),
         ),
-        opacity: widget.showBadge ? 1 : 0,
-        duration: Duration(milliseconds: 200),
       );
     }
 
     if (widget.toAnimate) {
       if (widget.animationType == BadgeAnimationType.slide) {
         return SlideTransition(
-          position: _positionTween.animate(_animation),
+          position: _positionTween.animate(_animation!),
           child: _badgeView(),
         );
       } else if (widget.animationType == BadgeAnimationType.scale) {
         return ScaleTransition(
-          scale: _animation,
+          scale: _animation!,
           child: _badgeView(),
         );
       } else if (widget.animationType == BadgeAnimationType.fade) {
         return FadeTransition(
-          opacity: _animation,
+          opacity: _animation!,
           child: _badgeView(),
         );
       }
@@ -236,8 +236,8 @@ class BadgeState extends State<Badge> with SingleTickerProviderStateMixin {
       final newText = widget.badgeContent as Text;
       final oldText = oldWidget.badgeContent as Text;
       if (newText.data != oldText.data) {
-        _animationController.reset();
-        _animationController.forward();
+        _animationController!.reset();
+        _animationController!.forward();
       }
     }
 
@@ -245,8 +245,8 @@ class BadgeState extends State<Badge> with SingleTickerProviderStateMixin {
       final newIcon = widget.badgeContent as Icon;
       final oldIcon = oldWidget.badgeContent as Icon;
       if (newIcon.icon != oldIcon.icon) {
-        _animationController.reset();
-        _animationController.forward();
+        _animationController!.reset();
+        _animationController!.forward();
       }
     }
 
@@ -255,7 +255,7 @@ class BadgeState extends State<Badge> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
-    _animationController.dispose();
+    _animationController!.dispose();
     super.dispose();
   }
 }
